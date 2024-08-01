@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learning.fmsmybatisliquibase.dao.SeatsDao">
+    <resultMap id="seatsResult" type="com.learning.fmsmybatisliquibase.model.Seats">
+        <id property="uuid" column="uuid" jdbcType="VARCHAR" javaType="java.util.UUID"
+            typeHandler="com.learning.fmsmybatisliquibase.handler.UuidTypeHandler"/>
+        <result property="flightUuid" column="flight_uuid" jdbcType="VARCHAR" javaType="java.util.UUID"
+                typeHandler="com.learning.fmsmybatisliquibase.handler.UuidTypeHandler"/>
+        <result property="seatNumber" column="seat_number"/>
+        <result property="seatType" column="seat_type"/>
+    </resultMap>
+
+    <select id="getByFlightUuid" resultMap="seatsResult">
+        SELECT *
+        FROM seats
+        WHERE flight_uuid = #{flightUuid}
+    </select>
+
+    <select id="getById" resultMap="seatsResult">
+        SELECT *
+        FROM seats
+        WHERE uuid = #{uuid}
+    </select>
+
+    <select id="getByFlightUuidAndSeatNumber" resultMap="seatsResult">
+        SELECT *
+        FROM seats
+        WHERE flight_uuid = #{flightUuid}
+          and seat_number = #{seatNumber}
+    </select>
+
+    <insert id="insert" flushCache="true">
+        INSERT INTO seats(uuid, flight_uuid, seat_number, seat_type)
+        VALUES (#{seats.uuid}, #{seats.flightUuid}, #{seats.seatNumber}, #{seats.seatType})
+    </insert>
+
+    <update id="update" flushCache="true">
+        UPDATE seats
+        SET flight_uuid = #{seats.flightUuid},
+            seat_number = #{seats.seatNumber},
+            seat_type   = #{seats.seatType}
+        WHERE uuid = #{seats.uuid}
+    </update>
+
+    <delete id="delete" flushCache="true">
+        DELETE
+        FROM seats
+        WHERE uuid = #{uuid}
+    </delete>
+</mapper>

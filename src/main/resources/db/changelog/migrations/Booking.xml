@@ -1,0 +1,112 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
+    <changeSet id="1" author="rvenkata">
+        <createTable tableName="booking">
+            <column name="uuid" type="${uuid_type}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="booking_pk"/>
+            </column>
+            <column name="flight_uuid" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_uuid" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="seat_uuid" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="booked_time" type="TIMESTAMPTZ">
+                <constraints nullable="false"/>
+            </column>
+            <column name="booking_status" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_time" type="TIMESTAMPTZ">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="TIMESTAMPTZ">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="booking" baseColumnNames="flight_uuid"
+                                 constraintName="flight_fk" deferrable="false"
+                                 initiallyDeferred="false" onUpdate="CASCADE" onDelete="CASCADE"
+                                 referencedTableName="flight" referencedColumnNames="uuid"/>
+
+        <addForeignKeyConstraint baseTableName="booking" baseColumnNames="user_uuid"
+                                 constraintName="user_pk" deferrable="false"
+                                 initiallyDeferred="false" onUpdate="CASCADE" onDelete="CASCADE"
+                                 referencedTableName="users" referencedColumnNames="uuid"/>
+
+        <addForeignKeyConstraint baseTableName="booking" baseColumnNames="seat_uuid"
+                                 constraintName="seat_fk" deferrable="false"
+                                 initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE"
+                                 referencedTableName="seats" referencedColumnNames="uuid"/>
+
+        <sql>
+            ALTER TABLE booking
+                ADD CONSTRAINT status_check CHECK ( booking_status = 'PENDING' or
+                                                    booking_status = 'BOOKED' or
+                                                    booking_status = 'CANCELLED' or
+                                                    booking_status = 'COMPLETED')
+        </sql>
+    </changeSet>
+
+    <changeSet id="2" author="rvenkata">
+        <createTable tableName="booking_information">
+            <column name="uuid" type="${uuid_type}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="booking_info_uuid"/>
+            </column>
+            <column name="booking_uuid" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="booking_status" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_number" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="country" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="postal_code" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_time" type="TIMESTAMPTZ">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="TIMESTAMPTZ">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="booking_information" baseColumnNames="booking_uuid"
+                                 constraintName="booking_fk" deferrable="false"
+                                 initiallyDeferred="false" onUpdate="CASCADE" onDelete="CASCADE"
+                                 referencedTableName="booking" referencedColumnNames="uuid"/>
+
+        <sql>
+            ALTER TABLE booking_information
+                ADD CONSTRAINT status_check CHECK ( booking_status = 'PENDING' or
+                                                    booking_status = 'BOOKED' or
+                                                    booking_status = 'CANCELLED' or
+                                                    booking_status = 'COMPLETED')
+        </sql>
+    </changeSet>
+</databaseChangeLog>

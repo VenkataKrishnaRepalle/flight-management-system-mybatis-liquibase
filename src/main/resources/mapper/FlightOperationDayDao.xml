@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learning.fmsmybatisliquibase.dao.FlightOperationDayDao">
+    <resultMap id="flightOperationDayResult" type="com.learning.fmsmybatisliquibase.model.FlightOperationDay">
+        <result property="flightUuid" column="flight_uuid" jdbcType="VARCHAR" javaType="java.util.UUID"
+                typeHandler="com.learning.fmsmybatisliquibase.handler.UuidTypeHandler"/>
+        <result property="operationDay" column="operation_day"/>
+    </resultMap>
+
+    <select id="getByFlightUuid" resultMap="flightOperationDayResult">
+        SELECT *
+        FROM flight_operations
+        WHERE flight_uuid = #{flightUuid}
+    </select>
+
+    <insert id="insert" flushCache="true">
+        INSERT INTO flight_operations(flight_uuid, operation_day)
+        VALUES (#{flightOperationDay.flightUuid}, #{flightOperationDay.operationDay})
+    </insert>
+
+    <delete id="delete" flushCache="true">
+        DELETE
+        FROM flight_operations
+        WHERE flight_uuid = #{lightOperationDay.flightUuid}
+          and operation_day = #{lightOperationDay.operationDay}
+    </delete>
+</mapper>

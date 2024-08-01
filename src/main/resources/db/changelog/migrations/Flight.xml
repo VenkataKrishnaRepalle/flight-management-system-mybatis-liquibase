@@ -1,0 +1,140 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
+    <changeSet id="1" author="rvenkata">
+        <createTable tableName="flight">
+            <column name="uuid" type="${uuid_type}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="flight_pk"/>
+            </column>
+            <column name="number" type="VARCHAR">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="carrier_name" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="model" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="departure_airport_uuid" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="arrival_airport_uuid" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="seat_capacity" type="number">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="${uuid_type}"/>
+            <column name="created_time" type="TIMESTAMPTZ">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_time" type="TIMESTAMPTZ">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="flight" baseColumnNames="departure_airport_uuid"
+                                 constraintName="departure_airport_uuid_fk" deferrable="false"
+                                 initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE"
+                                 referencedTableName="airport" referencedColumnNames="uuid"/>
+        <addForeignKeyConstraint baseTableName="flight" baseColumnNames="arrival_airport_uuid"
+                                 constraintName="arrival_airport_uuid_fk" deferrable="false"
+                                 initiallyDeferred="false" onUpdate="CASCADE" onDelete="CASCADE"
+                                 referencedTableName="airport" referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="2" author="rvenkata">
+        <createTable tableName="flight_operations">
+            <column name="flight_uuid" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="operation_day" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint tableName="flight_operations" columnNames="flight_uuid, operation_day"/>
+
+        <addForeignKeyConstraint baseTableName="flight_operations" baseColumnNames="flight_uuid"
+                                 constraintName="flight_fk" deferrable="false"
+                                 initiallyDeferred="false" onUpdate="CASCADE" onDelete="CASCADE"
+                                 referencedTableName="flight" referencedColumnNames="uuid"/>
+
+        <sql>
+            ALTER TABLE flight_operations
+                ADD CONSTRAINT operation_day_check CHECK ( operation_day = 'DAILY' or
+                                                           operation_day = 'SUNDAY' or
+                                                           operation_day = 'MONDAY' or
+                                                           operation_day = 'TUESDAY' or
+                                                           operation_day = 'WEDNESDAY' or
+                                                           operation_day = 'THURSDAY' or
+                                                           operation_day = 'FRIDAY' or
+                                                           operation_day = 'SATURDAY')
+        </sql>
+    </changeSet>
+
+    <changeSet id="3" author="rvenkata">
+        <createTable tableName="seats">
+            <column name="uuid" type="${uuid_type}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="seats_pk"/>
+            </column>
+            <column name="flight_uuid" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="seat_number" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="seat_type" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint tableName="seats" columnNames="flight_uuid, seat_number"/>
+
+        <addForeignKeyConstraint baseTableName="seats" baseColumnNames="flight_uuid"
+                                 constraintName="flight_fk" deferrable="false"
+                                 initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE"
+                                 referencedTableName="flight" referencedColumnNames="uuid"/>
+
+        <sql>
+            ALTER TABLE seats
+                ADD CONSTRAINT seat_type_check CHECK ( seat_type = 'BUSINESS_ECONOMY' or
+                                                       seat_type = 'PREMIUM_ECONOMY' or
+                                                       seat_type = 'MAIN_CABIN' or
+                                                       seat_type = 'BASIC_ECONOMY')
+        </sql>
+    </changeSet>
+
+    <changeSet id="4" author="rvenkata">
+        <createTable tableName="stops">
+            <column name="uuid" type="${uuid_type}">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="stops_pk"/>
+            </column>
+            <column name="flight_uuid" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="airport_uuid" type="${uuid_type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="stop_sequence" type="number">
+                <constraints nullable="false"/>
+            </column>
+            <column name="arrival_time" type="TIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="departure_time" type="TIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="stops" baseColumnNames="flight_uuid"
+                                 constraintName="flight_fk" deferrable="false"
+                                 initiallyDeferred="false" onUpdate="CASCADE" onDelete="CASCADE"
+                                 referencedTableName="flight" referencedColumnNames="uuid"/>
+
+        <addForeignKeyConstraint baseTableName="stops" baseColumnNames="airport_uuid"
+                                 constraintName="airport_fk" deferrable="false"
+                                 initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE"
+                                 referencedTableName="airport" referencedColumnNames="uuid"/>
+    </changeSet>
+</databaseChangeLog>

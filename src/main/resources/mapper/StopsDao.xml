@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learning.fmsmybatisliquibase.dao.StopsDao">
+    <resultMap id="stopsResult" type="com.learning.fmsmybatisliquibase.model.Stops">
+        <id property="uuid" column="uuid" javaType="java.util.UUID" jdbcType="VARCHAR"
+            typeHandler="com.learning.fmsmybatisliquibase.handler.UuidTypeHandler"/>
+        <result property="flightUuid" column="flight_uuid" javaType="java.util.UUID" jdbcType="VARCHAR"
+                typeHandler="com.learning.fmsmybatisliquibase.handler.UuidTypeHandler"/>
+        <result property="airportUuid" column="airport_uuid" javaType="java.util.UUID" jdbcType="VARCHAR"
+                typeHandler="com.learning.fmsmybatisliquibase.handler.UuidTypeHandler"/>
+        <result property="stopSequence" column="stop_sequence"/>
+        <result property="arrivalTime" column="arrivalTime"/>
+        <result property="departureTime" column="departure_time"/>
+    </resultMap>
+
+    <select id="getByFlightUuid" resultMap="stopsResult">
+        SELECT *
+        FROM stops
+        WHERE flight_uuid = #{flightUuid}
+    </select>
+
+    <select id="getById" resultMap="stopsResult">
+        SELECT *
+        FROM stops
+        WHERE uuid = #{uuid}
+    </select>
+
+    <insert id="insert" flushCache="true">
+        INSERT INTO stops(uuid, flight_uuid, airport_uuid, stop_sequence, arrival_time, departure_time)
+        VALUES (#{stops.uuid}, #{stops.flightUuid}, #{stops.airportUuid}, #{stops.stopSequence},
+                #{stops.arrivalTime}, #{stops.departureTime})
+    </insert>
+
+    <update id="update" flushCache="true">
+        UPDATE stops
+        SET flight_uuid    = #{stops.flightUuid},
+            airport_uuid   = #{stops.airportUuid},
+            stop_sequence  = #{stops.stopSequence},
+            arrival_time   = #{stops.arrivalTime},
+            departure_time = #{stops.departureTime}
+        WHERE uuid = #{stops.uuid}
+    </update>
+
+    <delete id="delete" flushCache="true">
+        DELETE
+        FROM stops
+        WHERE uuid = #{uuid}
+    </delete>
+</mapper>

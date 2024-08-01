@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learning.fmsmybatisliquibase.dao.FlightDao">
+    <resultMap id="flightResult" type="com.learning.fmsmybatisliquibase.model.Flight">
+        <id property="uuid" column="uuid" javaType="java.util.UUID" jdbcType="VARCHAR"
+            typeHandler="com.learning.fmsmybatisliquibase.handler.UuidTypeHandler"/>
+        <result property="number" column="number"/>
+        <result property="carrierName" column="carrier_name"/>
+        <result property="model" column="model"/>
+        <result property="departureAirportUuid" column="departure_airport_uuid" javaType="java.util.UUID"
+                jdbcType="VARCHAR"
+                typeHandler="com.learning.fmsmybatisliquibase.handler.UuidTypeHandler"/>
+        <result property="arrivalAirportUuid" column="arrival_airport_uuid" javaType="java.util.UUID" jdbcType="VARCHAR"
+                typeHandler="com.learning.fmsmybatisliquibase.handler.UuidTypeHandler"/>
+        <result property="seatCapacity" column="seat_capacity"/>
+        <result property="createdBy" column="created_by" javaType="java.util.UUID" jdbcType="VARCHAR"
+                typeHandler="com.learning.fmsmybatisliquibase.handler.UuidTypeHandler"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="updatedTime" column="updated_time"/>
+    </resultMap>
+
+    <select id="getAll" resultMap="flightResult">
+        SELECT *
+        FROM flight
+    </select>
+
+    <select id="getByNumber" resultMap="flightResult">
+        SELECT *
+        FROM flight
+        WHERE number = #{number}
+    </select>
+
+    <select id="getById" resultMap="flightResult">
+        SELECT *
+        FROM flight
+        WHERE uuid = #{uuid}
+    </select>
+
+    <insert id="insert" flushCache="true">
+        INSERT INTO flight(uuid, number, carrier_name, model, departure_airport_uuid, arrival_airport_uuid,seat_capacity, created_by, created_time, updated_time)
+        VALUES (#{flight.uuid}, #{flight.number}, #{flight.carrierName}, #{flight.model},
+                #{flight.departureAirportUuid},
+                #{flight.arrivalAirportUuid}, #{flight.seatCapacity},
+                #{flight.createdBy},
+                CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+    </insert>
+
+    <update id="update" flushCache="true">
+        UPDATE flight
+        set number                 = #{flight.number},
+            carrier_name           = #{flight.carrierName},
+            model                  = #{flight.model},
+            departure_airport_uuid = #{flight.departureAirportUuid},
+            arrival_airport_uuid   = #{flight.arrivalAirportUuid},
+            seat_capacity          = #{flight.createdBy},
+            created_by             = #{flight.createdBy},
+            updated_time           = CURRENT_TIMESTAMP
+        WHERE uuid = #{flight.uuid}
+    </update>
+
+    <delete id="delete" flushCache="true">
+        DELETE
+        FROM flight
+        WHERE uuid = #{uuid}
+    </delete>
+</mapper>

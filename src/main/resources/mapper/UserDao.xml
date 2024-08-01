@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learning.fmsmybatisliquibase.dao.UserDao">
+    <resultMap id="userResult" type="com.learning.fmsmybatisliquibase.model.User">
+        <id property="uuid" column="uuid" jdbcType="VARCHAR" javaType="java.util.UUID"
+            typeHandler="com.learning.fmsmybatisliquibase.handler.UuidTypeHandler"/>
+        <result property="firstName" column="first_name"/>
+        <result property="lastName" column="last_name"/>
+        <result property="mobileNumber" column="mobile_number"/>
+        <result property="email" column="email"/>
+        <result property="password" column="password"/>
+        <result property="createdTime" column="created_time"/>
+        <result property="updatedTime" column="updated_time"/>
+    </resultMap>
+
+    <select id="findByEmail" resultMap="userResult">
+        SELECT *
+        FROM users
+        where email = #{email}
+    </select>
+
+    <select id="count">
+        SELECT COUNT(*) FROM users
+    </select>
+
+    <select id="getById" resultMap="userResult">
+        SELECT * FROM users WHERE uuid = #{uuid}
+    </select>
+
+    <insert id="insert" flushCache="true">
+        INSERT INTO users(uuid, first_name, last_name, mobile_number, email, password, created_time, updated_time)
+        VALUES (#{user.uuid}, #{user.firstName}, #{user.lastName}, #{user.mobileNumber}, #{user.email},
+                #{user.password}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+    </insert>
+
+    <update id="update" flushCache="true">
+        UPDATE users
+        SET first_name    = #{user.firstName},
+            last_name     = #{user.lastName},
+            mobile_number = #{user.mobileNumber},
+            email         = #{user.email},
+            password      = #{user.password},
+            updated_time  = CURRENT_TIMESTAMP
+        WHERE uuid = #{user.uuid}
+    </update>
+
+    <delete id="delete" flushCache="true">
+        DELETE
+        FROM users
+        where uuid = #{uuid}
+    </delete>
+</mapper>
