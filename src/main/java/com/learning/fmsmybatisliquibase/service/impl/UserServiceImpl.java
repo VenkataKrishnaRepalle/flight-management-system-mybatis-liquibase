@@ -24,12 +24,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
@@ -63,7 +65,6 @@ public class UserServiceImpl implements UserService {
         var token = jwtTokenProvider.generateToken(authentication);
 
         var userRoles = userRoleDao.getByUserUuid(user.getUuid());
-        System.out.println(userRoles);
         var roles = userRoles
                 .stream().map(userRole -> userRole.getRole().toString())
                 .toList();

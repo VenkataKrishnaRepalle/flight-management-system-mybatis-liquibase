@@ -16,6 +16,7 @@ import com.learning.fmsmybatisliquibase.service.StopsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Comparator;
@@ -24,6 +25,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class FlightServiceImpl implements FlightService {
 
     private final FlightDao flightDao;

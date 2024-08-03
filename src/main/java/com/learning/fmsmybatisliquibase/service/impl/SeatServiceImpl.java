@@ -8,11 +8,13 @@ import com.learning.fmsmybatisliquibase.service.SeatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class SeatServiceImpl implements SeatService {
 
     private final SeatsDao seatsDao;
@@ -62,14 +64,14 @@ public class SeatServiceImpl implements SeatService {
 
     @Override
     public List<Seats> update(UUID flightId, List<Seats> seats) {
-        return seats.stream()
-                .peek(seat -> {
-                    getById(seat.getUuid());
-                    if (seatsDao.getByFlightUuidAndSeatNumber(flightId, seat.getSeatNumber()) != null) {
-                        throw new IntegrityException("SEAT_EXISTS", "Seat already exists with number " + seat.getSeatNumber());
+        seats.forEach(seat -> {
+            getById(seat.getUuid());
+            if (seatsDao.getByFlightUuidAndSeatNumber(flightId, seat.getSeatNumber()) != null) {
+                throw new IntegrityException("SEAT_EXISTS", "Seat already exists with number " + seat.getSeatNumber());
 
-                    }
-                })
+            }
+        });
+        return seats.stream()
                 .map(seat -> {
                     try {
                         if (0 == seatsDao.update(seat)) {

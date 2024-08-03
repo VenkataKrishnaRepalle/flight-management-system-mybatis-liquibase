@@ -1,6 +1,5 @@
 package com.learning.fmsmybatisliquibase.service.impl;
 
-import com.learning.fmsmybatisliquibase.dao.FlightDao;
 import com.learning.fmsmybatisliquibase.dao.FlightOperationDayDao;
 import com.learning.fmsmybatisliquibase.exception.IntegrityException;
 import com.learning.fmsmybatisliquibase.model.FlightOperationDay;
@@ -9,6 +8,7 @@ import com.learning.fmsmybatisliquibase.service.FlightOperationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +16,10 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class FlightOperationServiceImpl implements FlightOperationService {
 
     private final FlightOperationDayDao flightOperationDayDao;
-    private final FlightDao flightDao;
 
 
     @Override

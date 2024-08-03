@@ -7,6 +7,7 @@ import com.learning.fmsmybatisliquibase.service.StopsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class StopsServiceImpl implements StopsService {
 
     private final StopsDao stopsDao;
