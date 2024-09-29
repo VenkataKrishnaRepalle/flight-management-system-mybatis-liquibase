@@ -9,6 +9,7 @@
         <result property="airportUuid" column="airport_uuid" javaType="java.util.UUID" jdbcType="VARCHAR"
                 typeHandler="com.learning.fmsmybatisliquibase.handler.UuidTypeHandler"/>
         <result property="stopSequence" column="stop_sequence"/>
+        <result property="stopStatus" column="status"/>
         <result property="arrivalTime" column="arrivalTime"/>
         <result property="departureTime" column="departure_time"/>
     </resultMap>
@@ -26,8 +27,8 @@
     </select>
 
     <insert id="insert" flushCache="true">
-        INSERT INTO stops(uuid, flight_uuid, airport_uuid, stop_sequence, arrival_time, departure_time)
-        VALUES (#{stops.uuid}, #{stops.flightUuid}, #{stops.airportUuid}, #{stops.stopSequence},
+        INSERT INTO stops(uuid, flight_uuid, airport_uuid, stop_sequence, status, arrival_time, departure_time)
+        VALUES (#{stops.uuid}, #{stops.flightUuid}, #{stops.airportUuid}, #{stops.stopSequence}, #{stops.stopStatus},
                 #{stops.arrivalTime}, #{stops.departureTime})
     </insert>
 
@@ -36,6 +37,7 @@
         SET flight_uuid    = #{stops.flightUuid},
             airport_uuid   = #{stops.airportUuid},
             stop_sequence  = #{stops.stopSequence},
+            status         = #{stops.stopStatus},
             arrival_time   = #{stops.arrivalTime},
             departure_time = #{stops.departureTime}
         WHERE uuid = #{stops.uuid}

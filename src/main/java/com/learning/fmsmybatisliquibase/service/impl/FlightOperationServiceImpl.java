@@ -42,6 +42,7 @@ public class FlightOperationServiceImpl implements FlightOperationService {
         return flightOperationDayDao.getByFlightUuid(flightId);
     }
 
+
     private void insert(FlightOperationDay flightOperationDay) {
         try {
             if (0 == flightOperationDayDao.insert(flightOperationDay)) {

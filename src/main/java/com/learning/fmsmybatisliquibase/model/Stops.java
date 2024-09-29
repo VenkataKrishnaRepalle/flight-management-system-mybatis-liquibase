@@ -22,6 +22,8 @@ public class Stops {
 
     private int stopSequence;
 
+    private StopStatus stopStatus;
+
     private LocalTime arrivalTime;
 
     private LocalTime departureTime;

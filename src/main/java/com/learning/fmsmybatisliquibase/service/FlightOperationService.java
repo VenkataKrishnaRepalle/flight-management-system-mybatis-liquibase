@@ -10,4 +10,5 @@ public interface FlightOperationService {
     List<FlightOperationDay> create(UUID uuid, List<OperationDayType> operationDayTypes);
 
     List<FlightOperationDay> getByFlightId(UUID flightId);
+
 }

@@ -16,7 +16,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreateFlightRequestDto {
+public class FlightRequestDto {
 
     private Flight flight;
 

@@ -119,6 +119,9 @@
             <column name="stop_sequence" type="number">
                 <constraints nullable="false"/>
             </column>
+            <column name="status" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
             <column name="arrival_time" type="TIME">
                 <constraints nullable="false"/>
             </column>
@@ -126,6 +129,12 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <sql>
+            ALTER TABLE stops
+                ADD CONSTRAINT status_check CHECK ( status = 'ACTIVE' or
+                                                    status = 'INACTIVE')
+        </sql>
 
         <addForeignKeyConstraint baseTableName="stops" baseColumnNames="flight_uuid"
                                  constraintName="flight_fk" deferrable="false"

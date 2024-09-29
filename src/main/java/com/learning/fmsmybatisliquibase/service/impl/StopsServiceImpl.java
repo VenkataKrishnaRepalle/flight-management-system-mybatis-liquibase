@@ -21,17 +21,18 @@ public class StopsServiceImpl implements StopsService {
     private final StopsDao stopsDao;
 
     @Override
-    public List<Stops> create(List<Stops> stops) {
+    public List<Stops> create(UUID flightId, List<Stops> stops) {
         List<Stops> stopsResult = new ArrayList<>();
-        for(var stop: stops) {
-            if(stop.getArrivalTime().isAfter(stop.getDepartureTime())){
+        for (var stop : stops) {
+            if (stop.getArrivalTime().isAfter(stop.getDepartureTime())) {
                 throw new IntegrityException("INVALID_STOP_TIMES", "Arrival time cannot be before departure time");
             }
         }
         for (var stop : stops) {
+            stop.setFlightUuid(flightId);
             stopsResult.add(insert(stop));
         }
-        return stopsResult.isEmpty()? null : stopsResult;
+        return stopsResult.isEmpty() ? null : stopsResult;
     }
 
     @Override

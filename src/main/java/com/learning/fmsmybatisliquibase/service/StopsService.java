@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface StopsService {
-    List<Stops> create(List<Stops> stops);
+    List<Stops> create(UUID flightId, List<Stops> stops);
 
     List<Stops> getByFlightId(UUID flightId);
 }
